@@ -58,11 +58,11 @@ ifeq ($(DISTRO),RHEL5)
 endif
 
 ifeq ($(DISTRO),RHEL6)
-    SUBDIRS:=$(filter-out nnp_nosuid overlay atsecure, $(SUBDIRS))
+    SUBDIRS:=$(filter-out nnp_nosuid overlay atsecure netlink_socket keys tun_tap filesystem, $(SUBDIRS))
 endif
 
 ifeq ($(DISTRO),RHEL7)
-    SUBDIRS:=$(filter-out netlink_socket, $(SUBDIRS))
+    SUBDIRS:=$(filter-out netlink_socket keys tun_tap filesystem, $(SUBDIRS))
 endif
 
 .PHONY: all test clean

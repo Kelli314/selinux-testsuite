@@ -5,5 +5,26 @@ if [[ -r /etc/redhat-release ]]; then
 	if [[ -n $ver ]]; then
 		echo "$ver" | \
 			sed -e 's/Red Hat Enterprise Linux[ \ta-zA-Z]*\([0-9]\+\).*/RHEL\1/'
+		exit 0
+	fi
+
+	# If we were not able to find the Red Hat release from the rhel-release
+        # file, attempt to find the release based on the kernel version.
+	MAJOR_VER=$(uname -r | sed -e 's/^\([0-9]\+\)\..*/\1/')
+	MINOR_VER=$(uname -r | sed -e 's/^[0-9]\+\.\([0-9]\+\)\..*/\1/')
+	PATCH_VER=$(uname -r | sed -e 's/^[0-9]\+\.[0-9]\+\.\([0-9]\+\).*/\1/')
+
+	if [ $MAJOR_VER -eq 4 ]; then
+		echo "RHEL8"
+	elif [ $MAJOR_VER -eq 3 ]; then
+		echo "RHEL7"
+	elif [ $MAJOR_VER -eq 2 ] && [ $MINOR_VER -eq 6 ]; then
+		if [ $PATCH_VER -eq 32 ]; then
+			echo "RHEL6"
+		elif [ $PATCH_VER -eq 18 ]; then
+			echo "RHEL5"
+		elif [ $PATCH_VER -eq 9 ]; then
+			echo "RHEL4"
+		fi
 	fi
 fi
